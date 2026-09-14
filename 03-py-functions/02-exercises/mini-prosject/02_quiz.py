@@ -1,5 +1,3 @@
-score = 0
-
 def ask_question(question_text):
     print(question_text)
     answer = input('Write your answer here:')
@@ -23,17 +21,17 @@ def run_quiz():
     answer = ask_question("What is the name of the king of Norway?")
     is_correct = check_answer(answer, "Haakon")
     show_feedback(is_correct)
-    if is_correct:
+    if is_correct == True:
         score += 1
     answer = ask_question("What is the capital of Norway?")
     is_correct = check_answer(answer, "Oslo")
     show_feedback(is_correct)
-    if is_correct:
+    if is_correct == True:
         score += 1
     answer = ask_question("What is the name of our teacher?")
     is_correct = check_answer(answer, "Tomas")
     show_feedback(is_correct)
-    if is_correct:
+    if is_correct == True:
         score += 1
     print(f'You got {score} points!')
 
