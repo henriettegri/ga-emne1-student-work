@@ -1,4 +1,4 @@
 Item: Epler
 Amount: 20
 Price: 96.50
-kommentar: Husk blåbær og grøt!
+kommentar: Husk blÃ¥bÃ¦r og grÃ¸t!

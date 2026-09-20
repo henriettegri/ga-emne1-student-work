@@ -10,6 +10,7 @@ else:
     print(f' Text written in lower letters: {text.lower()}')
     print(f' Text reversed: {text[::-1]}')
 
+#kan gjøres om til lowercase_letters - lært underveis
     if "python" in text:
         print("Yes, python is present!")
     elif "Python" in text:
