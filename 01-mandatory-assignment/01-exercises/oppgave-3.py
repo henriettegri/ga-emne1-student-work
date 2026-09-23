@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 #en funksjon som tar imot en dato på formatet dd.mm.åååå og returnerer en datoverdi når teksten er gyldig
 def get_date():
+    valid_date = False
     while True:
         date_input = input("Skriv en dato (dd.mm.åååå): ")
 

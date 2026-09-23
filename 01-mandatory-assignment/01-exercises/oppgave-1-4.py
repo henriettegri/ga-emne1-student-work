@@ -36,7 +36,9 @@ def analyze_text():
 
 #Analysere et tallintervall, oppgave 1.3
 def analyze_number():
-    while True:
+
+    valid_input = False
+    while not valid_input:
         start_value = input("Skriv en startverdi: ")
         try:
             number_1 = int(start_value)
@@ -48,6 +50,7 @@ def analyze_number():
 
         try:
             number_2 = int(end_value)
+
         except ValueError:
             print('Feil! Du må skrive inn et tall!\n')
             continue
@@ -56,7 +59,7 @@ def analyze_number():
             print("Ugyldig input, prøv igjen.")
             continue
 
-        break
+        valid_input = True
 
     even = []
     three = []

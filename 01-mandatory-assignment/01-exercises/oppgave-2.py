@@ -29,17 +29,18 @@ lessons = [
 
 #Legge til økter
 def add_lessons():
-    while (True):
+    valid_topic = False
+    while not valid_topic:
 
         new_topic = input("Legg til emne: ").strip().capitalize()
         if new_topic == "":
              print("Emne kan ikke være tomt.")
              continue
         else:
-            break
+            valid_topic = True
 
-
-    while (True):
+    valid_minutes = False
+    while not valid_minutes:
         new_duration_minutes = input("Legg til varighet: ")
 
         if new_duration_minutes.strip() == "":
@@ -54,13 +55,14 @@ def add_lessons():
             continue
 
         if svarSomTall > 0:
-            break
+            valid_minutes = True
 
-    while (True):
-        new_status = input("Legg til status: ")
+    valid_status = False
+    while not valid_status:
+        new_status = input("Legg til status: ").lower()
 
         if new_status == "planned" or new_status == "completed":
-            break
+            valid_status = True
         else:
             print("Du må skrive planned eller completed.")
             continue
@@ -75,13 +77,14 @@ def add_lessons():
 
 #Søke
 def search():
-    while True:
+    valid_search = False
+    while not valid_search:
         search = input("Søk etter et tema: ").strip().capitalize()
         if search == "":
              print("Input kan ikke være tomt.")
              continue
         else:
-            break
+            valid_search = True
 
     for lesson in lessons:
         if lesson["topic"] == search:
@@ -140,7 +143,7 @@ while True:
 
     elif svar == "6":
         total_minutes, average = total_average()
-        print(f'Total varighet: {total_minutes}. Gjennomsnitt: {average:.2f}')
+        print(f'Total varighet på fullførte økter: {total_minutes}. \nGjennomsnittlig varighet for fullførte økter: {average:.2f}')
 
     if svar == "7":
         break

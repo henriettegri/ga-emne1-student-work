@@ -12,7 +12,7 @@ try:
         csv_file = csv.DictReader(file)
 
         # sjekker om radene inneholder verdier
-
+        print('KONTROLLERT DATA:')
         valid_rows = []
         for row_number, row in enumerate(csv_file, start=2):
 
@@ -52,7 +52,7 @@ try:
         #print(row)
 
     #antall gyldige rader
-    print(len(valid_rows))
+    print(f'\nAntall gyldige rader: {len(valid_rows)}')
 
     category_1 = 0
 
@@ -79,11 +79,11 @@ try:
             category_4 += 1
 
     print(f'Antall gyldige henvendelser: {len(valid_rows)}.')
-    print(f'Antall i hver kategori:\nInnlogging {category_1}.\nProgramvare: {category_2}.\nNettverk: {category_3}.\nUtstyr: {category_4}.')
+    print(f'Antall i hver kategori:\n- Innlogging {category_1}.\n- Programvare: {category_2}.\n- Nettverk: {category_3}.\n- Utstyr: {category_4}.')
 
     #samlet og gjennomsnittlig tidsbruk
     if len(valid_rows) == 0:
-        print("Ingen gyldige henvendelsr funnet.")
+        print("Ingen gyldige henvendelser funnet.")
     else:
         total_minutes = 0
 
@@ -92,7 +92,7 @@ try:
             total_minutes += int(row["minutes"])
             number_of_cases += 1
         average = total_minutes / number_of_cases
-        print(f'Samlet tidsbruk: {total_minutes}.')
+        print(f'\nSamlet tidsbruk: {total_minutes}.')
         print(f'Gjennomsnittlig tidsbruk: {average:.1f}')
 
     #løste og uløste saker
@@ -107,8 +107,8 @@ try:
         if row["is_resolved"] == "no":
             unsolved += 1
 
-    print(f'Løste saker: {solved}.')
-    print(f'Uløste saker: {unsolved}.')
+    print(f'\nLøste saker: {solved}.')
+    print(f'Uløste saker: {unsolved}.\n')
 
     #flest henvendelser
     most_cases = max(category_1, category_2, category_3, category_4)
@@ -138,7 +138,7 @@ try:
     list_of_minutes.sort(key=get_minutes, reverse=True)
 
 
-    print("Listen sortert etter varighet, lengst først")
+    print("\nListen sortert etter varighet, lengst først:")
     for row in list_of_minutes:
         print(f"ID: {row['id']}, minutter: {row['minutes']}")
 
@@ -153,8 +153,8 @@ with file_path.open("w", encoding="utf-8") as file:
     file.write("ANALYSERESULTATER\n")
 
     #antall gyldige henvendelser og antall i hver kategori
-    file.write(f"Antall gyldige henvendelser: {len(valid_rows)}\n")
-    file.write(f"Antall henvendelser hver kategori:\n")
+    file.write(f"Antall gyldige henvendelser: {len(valid_rows)}\n\n")
+    file.write(f"Antall henvendelser i hver kategori:\n")
     file.write(f" - Innlogging: {category_1}.\n")
     file.write(f" - Programvare: {category_2}.\n")
     file.write(f" - Nettverk: {category_3}.\n")
@@ -179,4 +179,4 @@ with file_path.open("w", encoding="utf-8") as file:
     for row in list_of_minutes:
         file.write(f"ID: {row['id']}, minutter: {row['minutes']}\n")
 
-print(f"File '{file_path}' created successfully.")
+print(f"\nFile '{file_path}' created successfully.")
