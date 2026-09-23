@@ -6,9 +6,10 @@ if text.isspace() or text =='':
     print("Wrong input, please try again.")
 
 else:
-    print(f' Number of letters: {len(text)}')
-    print(f' Text written in lower letters: {text.lower()}')
-    print(f' Text reversed: {text[::-1]}')
+    print(f'Number of letters and space: {len(text)}')
+    print(f'Number of letters without space: {len(text.replace(" ",""))}')
+    print(f'Text written in lower letters: {text.lower()}')
+    print(f'Text reversed: {text[::-1]}')
 
 #kan gjøres om til lowercase_letters - lært underveis
     if "python" in text:

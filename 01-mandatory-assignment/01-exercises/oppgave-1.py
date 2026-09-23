@@ -1,4 +1,4 @@
-# oppgave 1.1
+#IKKE FERDIG oppgave 1.1
 study_sessions = int(input("Number of sessions: "))
 minutes_per_session = int(input("Minutes per sessions: "))
 
