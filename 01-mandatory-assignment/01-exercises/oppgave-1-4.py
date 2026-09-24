@@ -1,17 +1,40 @@
 #Beregner tidsbruk på studieøkter, oppgave 1.1
-def tidsbruk():
-    study_sessions = int(input("Antall studieøkter: "))
-    minutes_per_session = int(input("Minutter per økt: "))
+def study_session_duration():
 
-    if study_sessions > 0 and minutes_per_session > 0:
-        time = study_sessions * minutes_per_session
-        hours = time // 60
-        minutes = time % 60
+    valid_input = False
+    while not valid_input:
+        study_sessions = input("Antall studieøkter: ")
 
-        print(f"Samlet tidsbruk: {hours} timer og {minutes} minutter.")
+        try:
+            study_sessions_number = int(study_sessions)
+            if study_sessions_number <= 0:
+                print("Tallet må være større enn 0.")
+                continue
+        except ValueError:
+            print('Feil! Du må skrive inn et tall!\n')
+        else:
+            valid_input = True
 
-    else:
-        print("Feil, prøv igjen!")
+    valid_input_2 = False
+    while not valid_input_2:
+        minutes_per_session = input("Minutter per økt: ")
+
+        try:
+            minutes_per_session_number = int(minutes_per_session)
+            if minutes_per_session_number <= 0:
+                print("Tallet må være større enn 0.")
+                continue
+        except ValueError:
+            print('Feil! Du må skrive inn et tall!\n')
+        else:
+            valid_input_2 = True
+
+    time = study_sessions_number * minutes_per_session_number
+    hours = time // 60
+    minutes = time % 60
+
+    print(f"Samlet tidsbruk: {hours} timer og {minutes} minutter.")
+
 
 #Analyserer tekst, oppgave 1.2
 def analyze_text():
@@ -21,15 +44,13 @@ def analyze_text():
         print("Feil input, prøv igjen!")
 
     else:
-        print(f' Antall bokstaver: {len(text)}')
-        print(f' Tekst skrevet med små bokstaver: {text.lower()}')
-        print(f' Tekst skrevet baklengs: {text[::-1]}')
+        print(f'Antall tegn med mellomrom: {len(text)}')
+        print(f'Antall tegn uten mellomrom: {len(text.replace(" ", ""))}')
+        print(f'Tekst skrevet med små bokstaver: {text.lower()}')
+        print(f'Tekst skrevet baklengs: {text[::-1]}')
 
-        if "python" in text:
-            print("Ja, teksten inneholder ordet Python!")
-        elif "Python" in text:
-            print("Ja, teksten inneholder ordet Python!")
-        elif "PYTHON" in text:
+        contains_python = text.lower()
+        if "python" in contains_python:
             print("Ja, teksten inneholder ordet Python!")
         else:
             print("Nei, teksten inneholder ikke ordet Python!")
@@ -55,7 +76,7 @@ def analyze_number():
             print('Feil! Du må skrive inn et tall!\n')
             continue
 
-        if start_value > end_value:
+        if number_1 > number_2:
             print("Ugyldig input, prøv igjen.")
             continue
 
@@ -86,7 +107,7 @@ def show_menu():
     print(menu[-1])
 
 
-while True:
+while (True):
     show_menu()
     number = input('Velg et nummer fra menyen:')
 
@@ -97,7 +118,7 @@ while True:
     number = int(number)
 
     if number == 1:
-        tidsbruk()
+        study_session_duration()
 
     elif number == 2:
         analyze_text()

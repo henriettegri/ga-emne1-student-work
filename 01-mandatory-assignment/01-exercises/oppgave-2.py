@@ -48,13 +48,13 @@ def add_lessons():
              continue
 
         try:
-            svarSomTall = int(new_duration_minutes)
+            new_duration_number = int(new_duration_minutes)
 
         except ValueError:
             print('Feil! Du må skrive inn et tall!\n')
             continue
 
-        if svarSomTall > 0:
+        if new_duration_number > 0:
             valid_minutes = True
 
     valid_status = False
@@ -67,12 +67,13 @@ def add_lessons():
             print("Du må skrive planned eller completed.")
             continue
 
-    lessons = {
+    new_lesson = {
         "topic": new_topic,
-        "duration_minutes": new_duration_minutes,
+        "duration_minutes": new_duration_number,
         "status": new_status
     }
 
+    lessons.append(new_lesson)
     print(lessons)
 
 #Søke
@@ -81,14 +82,19 @@ def search():
     while not valid_search:
         search = input("Søk etter et tema: ").strip().capitalize()
         if search == "":
-             print("Input kan ikke være tomt.")
-             continue
+            print("Input kan ikke være tomt.")
+            continue
         else:
             valid_search = True
 
+    found = False
     for lesson in lessons:
         if lesson["topic"] == search:
             print(lesson)
+            found = True
+
+    if not found:
+            print("Tema finnes ikke.")
 
 #Finne varighet
 def get_duration(lesson):
@@ -127,12 +133,14 @@ while True:
         add_lessons()
 
     elif svar == "2":
-            print(lessons)
+        for lesson in lessons:
+            print(f'{lesson["topic"]}, {lesson["duration_minutes"]} min, {lesson["status"]}')
+
 
     elif svar == "3":
         for lesson in lessons:
             if lesson["status"] == "completed":
-                print(lesson)
+                print(f'{lesson["topic"]}, {lesson["duration_minutes"]} min, {lesson["status"]}')
 
     elif svar == "4":
         search()

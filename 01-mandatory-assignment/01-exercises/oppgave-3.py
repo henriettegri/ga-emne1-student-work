@@ -65,8 +65,7 @@ def days_between():
     #abs i tilfellet antall dager blir negativt.
     return abs(number_of_days)
 
-#get_date()
-#get_endtime()
+# sjekk
 #print(f'Antall dager: {days_between()}')
 
 #en funksjon som tar imot en list med datoer og returnerer en kronologisk sortert list

@@ -83,7 +83,7 @@ try:
 
     #samlet og gjennomsnittlig tidsbruk
     if len(valid_rows) == 0:
-        print("Ingen gyldige henvendelser funnet.")
+        print("Ingen gyldige henvendelser er funnet.")
     else:
         total_minutes = 0
 
