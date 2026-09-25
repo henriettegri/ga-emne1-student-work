@@ -7,33 +7,33 @@ def get_date():
         date_input = input("Skriv en dato (dd.mm.åååå): ")
 
         if date_input.strip() == "":
-             print("Dato kan ikke være tom.")
+             print("Dato kan ikke være tom.\n")
              continue
 
         try:
             date = datetime.strptime(date_input, '%d.%m.%Y')
             return date
         except ValueError:
-            print('Denne datoen er ikke gyldig!')
+            print('Denne datoen er ikke gyldig!\n')
 
 
 #en funksjon som tar imot starttidspunkt og minutter og returnerer sluttid
 def get_endtime():
     while True:
-        start_time = input("Skriv en starttid (HH:mm): ")
+        start_time = input("\nSkriv en starttid (HH:mm): ")
 
         try:
             start_time = datetime.strptime(start_time, "%H:%M")
             break
         except ValueError:
-            print('Klokkeslettet er ugyldig, prøv igjen!')
+            print('Klokkeslettet er ugyldig, prøv igjen!\n')
 
     while True:
         minutes = input("Hvor mange minutter skal du studere?: ")
         if minutes.isdigit() and int(minutes)>0:
             break
         else:
-            print("Antall minutter må være et tall og mer enn null, prøv igjen!")
+            print("Antall minutter må være et tall og mer enn null, prøv igjen!\n")
 
     start = start_time
     end_time = start + timedelta(minutes=int(minutes))
@@ -49,7 +49,7 @@ def days_between():
 
             break
         except ValueError:
-            print("Denne datoen er ikke gyldig, prøv igjen!")
+            print("Denne datoen er ikke gyldig, prøv igjen!\n")
 
     while True:
         second_date_input = input("Skriv inn andre dato (dd.mm.åååå): ")
@@ -73,8 +73,8 @@ def list_of_dates(date_list):
     date_list.sort()
     return date_list
 
+
 #Hovedprogram
-print('STUDIEØKT')
 study_date = get_date()
 print(f'Dato: {study_date.strftime("%d.%m.%Y")}')
 #legg inn sluttid
@@ -82,12 +82,12 @@ end_time = get_endtime()
 print(f'Studieøkten slutter kl: {end_time.strftime("%H:%M")}')
 
 #beregne antall dager mellom
-print('\nDatoanalyse')
+print('\nDatoanalyse - Hvor mange dager er det mellom to datoer')
 number_of_days = days_between()
 print(f'Antall dager mellom datoene: {number_of_days}')
 
 #Lage en liste med datoer
-print('\nSortere datoer')
+print('\nLegg inn tre datoer som skal sortertes i kronologisk rekkefølge:')
 date_list = []
 day_1 = get_date()
 day_2 = get_date()
@@ -101,6 +101,6 @@ date_list.append(day_3)
 sorted_dates = list_of_dates(date_list)
 
 #skrive ut resultatene
-print(f'\nSorterte datoer:')
+print(f'\nDatoene i kronologisk rekkefølge:')
 for date in sorted_dates:
     print(date.strftime("%d.%m.%Y"))
