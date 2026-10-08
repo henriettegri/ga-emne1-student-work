@@ -108,3 +108,21 @@ WHERE CountryCode = 'NOR';
 SELECT Name AS CityName
 FROM city
 WHERE CountryCode = 'NOR';
+
+
+-- slår sammen tabeller:
+SELECT city.Name, city.Population, country.name
+FROM city
+JOIN country on city.CountryCode = country.code
+WHERE CountryCode = 'NOR';
+
+SELECT city.Name, city.Population, country.name
+FROM city
+JOIN country on city.CountryCode = country.code
+WHERE CountryCode = 'NOR';
+
+-- tips! kommenter ut join for å se hvordan det fungerer
+SELECT city.Name as 'By', city.Population as 'Folketall', country.name as 'Land' , country.Continent as 'Kontinent'
+FROM city
+JOIN country on city.CountryCode = country.code
+WHERE CountryCode = 'ITA';
