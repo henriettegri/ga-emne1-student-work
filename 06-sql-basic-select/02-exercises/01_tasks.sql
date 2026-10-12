@@ -236,3 +236,15 @@ JOIN country on countrylanguage.CountryCode = country.code
 WHERE Language = 'Spanish' AND IsOfficial = 'T'
 ORDER BY  Percentage DESC, Language ASC;
 
+-- Teller rader
+SELECT count(*)
+FROM countrylanguage
+JOIN country on countrylanguage.CountryCode = country.code
+WHERE Language = 'Spanish' AND IsOfficial = 'T'
+ORDER BY  Percentage DESC, Language ASC;
+
+-- Utfordring 4 Undersøk like bynavn
+SELECT ID, Name, CountryCode, District
+FROM city
+WHERE name = 'San Jose'
+ORDER BY CountryCode ASC, ID ASC;
