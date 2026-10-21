@@ -77,7 +77,8 @@ JOIN customers on customers.customer_id = orders.customer_id;
 -- 5. Beregnet verdi: Utvid bestillingsoversikten slik at den også viser en beregnet verdi basert på price *
 -- quantity. Gi den beregnede kolonnen et passende navn og sorter fra høyest til lavest verdi.
 
-SELECT orders.order_id, customers.first_name, customers.last_name, products.product_id, products.product_name, orders.quantity, orders.order_date, orders.status,
+SELECT orders.order_id, customers.first_name, customers.last_name, products.product_id,
+       products.product_name, orders.quantity, orders.order_date, orders.status,
        price * quantity AS beregnet_verdi
 FROM orders
 JOIN products on products.product_id = orders.product_id
@@ -87,24 +88,106 @@ ORDER BY beregnet_verdi DESC;
 
 -- 6. Bestillinger med høy verdi: Finn bestillinger med en beregnet verdi på mer enn 2000 kr. Vis kunden,
 -- produktet, antall, pris og beregnet verdi.
+SELECT customers.customer_id, products.product_name, orders.quantity,
+       products.price, products.price * orders.quantity AS beregnet_verdi
+FROM orders
+JOIN products ON products.product_id = orders.product_id
+JOIN customers ON customers.customer_id = orders.customer_id
+WHERE products.price * orders.quantity > 2000;
 
 
-7. Bestillinger per status: Finn ut hvor mange bestillinger som har hver status.
-8. Gjennomsnittspris per kategori: Finn gjennomsnittsprisen for produktene i hver kategori. Sorter fra
-høyest til lavest gjennomsnittspris.
-9. Bestillinger per kunde: Finn ut hvor mange bestillinger hver kunde har gjort. Sorter kunden med flest
-bestillinger først. Resultatet skal også inkludere kunder som har 0 bestillinger.
-10. Antall solgte produkter: Finn ut hvor mange enheter som totalt er bestilt av hvert produkt. Produkter
-som ikke forekommer i noen bestilling skal også være med i resultatet og vises med 0 bestilte enheter.
-Husk at antall rader i orders og totalt antall bestilte enheter ikke nødvendigvis er det samme.
-11. Beregnet verdi per produkt: Finn samlet beregnet verdi for hvert produkt basert på bestillingene. Vis
-produktnavn, totalt antall bestilte enheter og samlet beregnet verdi. Produkter uten bestillinger skal også
-være med og vises med 0 bestilte enheter og 0 i beregnet verdi. Sorter fra høyest til lavest verdi.
-12. Kunder med flere bestillinger: Finn kunder som har mer enn én bestilling. Vis kunden og antall
-bestillinger. Finn ut hvordan du kan filtrere grupperte resultater.
-13. Kunder uten bestillinger: Finn kunden eller kundene som ikke har noen bestillinger. Oppgaven skal løses
-ved hjelp av relasjonen mellom customers og orders.
-14. Produkter uten bestillinger: Finn produktet eller produktene som ikke forekommer i noen bestilling.
-Oppgaven skal løses ved hjelp av relasjonen mellom products og orders.
-15. Utforskingsoppgave: Finn kunden som har høyest samlet beregnet verdi på bestillingene sine. Du får
-ikke oppgitt hvilke SQL-elementer som skal brukes. Forklar kort hvordan du kom frem til løsningen.
+-- 7. Bestillinger per status: Finn ut hvor mange bestillinger som har hver status.
+SELECT status, COUNT(*)
+FROM orders
+-- WHERE status = 'Delivered' OR status ='Shipped' OR status = 'Processing'
+GROUP BY status;
+
+-- trenger ikke where siden alt skal være med, ingenting trengs å filtreres bort.
+
+
+-- 8. Gjennomsnittspris per kategori: Finn gjennomsnittsprisen for produktene i hver kategori. Sorter fra
+-- høyest til lavest gjennomsnittspris.
+
+SELECT category, COUNT(*), AVG(price) AS average
+FROM products
+GROUP BY category;
+
+-- 9. Bestillinger per kunde: Finn ut hvor mange bestillinger hver kunde har gjort. Sorter kunden med flest
+-- bestillinger først. Resultatet skal også inkludere kunder som har 0 bestillinger.
+
+
+SELECT customers.customer_id, first_name, last_name, orders.customer_id, quantity
+FROM customers
+LEFT JOIN orders ON customers.customer_id = orders.customer_id
+ORDER BY quantity DESC;
+
+-- eller slik?
+SELECT customers.customer_id, customers.last_name, COUNT(orders.order_id) AS antall_bestillinger
+FROM customers
+LEFT JOIN orders ON customers.customer_id = orders.customer_id
+GROUP BY customers.customer_id, customers.last_name;
+
+-- 10. Antall solgte produkter: Finn ut hvor mange enheter som totalt er bestilt av hvert
+-- produkt. Produkter som ikke forekommer i noen bestilling skal også være med i
+-- resultatet og vises med 0 bestilte enheter. Husk at antall rader i orders og totalt
+-- antall bestilte enheter ikke nødvendigvis er det samme.
+SELECT products.product_id, products.product_name, COUNT(orders.order_id) AS antall_solgte_produkter
+FROM products
+LEFT JOIN orders ON orders.product_id = products.product_id
+GROUP BY products.product_id, products.product_name
+ORDER BY antall_solgte_produkter DESC;
+
+
+-- 11. Beregnet verdi per produkt: Finn samlet beregnet verdi for hvert produkt basert på
+-- bestillingene. Vis produktnavn, totalt antall bestilte enheter og samlet beregnet verdi.
+-- Produkter uten bestillinger skal også være med og vises med 0 bestilte enheter og 0 i
+-- beregnet verdi. Sorter fra høyest til lavest verdi.
+SELECT products.product_id, product_name, (SUM(orders.quantity)* price) AS beregnet_verdi
+FROM products
+LEFT JOIN orders ON products.product_id = orders.product_id
+GROUP BY products.product_id, product_name, price
+ORDER BY beregnet_verdi DESC;
+
+-- 12. Kunder med flere bestillinger: Finn kunder som har mer enn én bestilling. Vis
+-- kunden og antall bestillinger. Finn ut hvordan du kan filtrere grupperte resultater.
+
+SELECT  customers.customer_id, last_name, COUNT(orders.customer_id) AS antall_bestillinger
+FROM customers
+LEFT JOIN orders ON orders.customer_id = customers.customer_id
+GROUP BY customers.customer_id, last_name
+HAVING antall_bestillinger > 1;
+
+-- 13. Kunder uten bestillinger: Finn kunden eller kundene som ikke har noen bestillinger. Oppgaven skal løses
+-- ved hjelp av relasjonen mellom customers og orders.
+
+SELECT  customers.customer_id, last_name, orders.customer_id
+FROM customers
+LEFT JOIN orders ON orders.customer_id = customers.customer_id
+WHERE orders.customer_id IS NULL;
+
+
+-- 14. Produkter uten bestillinger: Finn produktet eller produktene som ikke forekommer i noen bestilling.
+-- Oppgaven skal løses ved hjelp av relasjonen mellom products og orders.
+SELECT products.product_id, product_name, orders.product_id
+FROM products
+LEFT JOIN orders ON orders.product_id = products.product_id
+WHERE orders.product_id IS NULL;
+
+-- 15. Utforskingsoppgave: Finn kunden som har høyest samlet beregnet verdi på
+-- bestillingene sine. Du får ikke oppgitt hvilke SQL-elementer som skal brukes.
+-- Forklar kort hvordan du kom frem til løsningen.
+SELECT customers.last_name, SUM(orders.quantity*products.price) AS beregnet_verdi
+FROM orders
+JOIN products on products.product_id = orders.product_id
+JOIN customers on customers.customer_id = orders.customer_id
+GROUP BY customers.last_name
+ORDER BY beregnet_verdi DESC;
+-- tok utgangspunktet i tidligere oppgaver (11), prøve og feile-metoden.
+
+-- med null på kunde 8
+SELECT customers.last_name, SUM(orders.quantity*products.price) AS beregnet_verdi
+FROM orders
+JOIN products on products.product_id = orders.product_id
+RIGHT JOIN customers on customers.customer_id = orders.customer_id
+GROUP BY customers.last_name
+ORDER BY beregnet_verdi DESC;
