@@ -14,6 +14,8 @@ CREATE TABLE areas (
     UNIQUE (name)
 );
 
+-- kunne droppa id siden name må være unik, name kunne vært primary key.
+
 CREATE TABLE animals (
     id INT AUTO_INCREMENT,
     name VARCHAR(40) NOT NULL,

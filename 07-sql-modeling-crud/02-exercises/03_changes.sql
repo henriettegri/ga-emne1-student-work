@@ -1,3 +1,6 @@
+-- 6. Endre tabellstrukturen
+
+-- oppgave 6.1
 ALTER TABLE animals
 ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'new';
 
@@ -5,7 +8,7 @@ ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'new';
 INSERT INTO animals (name, species, area_id)
 VALUES('Nova', 'cat', 1);
 
-
+--oppgave 6.2
 ALTER TABLE animals
 MODIFY COLUMN status VARCHAR(20) NOT NULL DEFAULT 'available';
 
@@ -13,7 +16,7 @@ MODIFY COLUMN status VARCHAR(20) NOT NULL DEFAULT 'available';
 INSERT INTO animals (name, species, area_id)
 VALUES('Orea', 'cat', 1);
 
-
+--oppgave 6.3
 ALTER TABLE animals
 MODIFY COLUMN name VARCHAR(60) NOT NULL;
 
@@ -23,7 +26,7 @@ CREATE TABLE scratch_labels (
     PRIMARY KEY(id)
 );
 
-
+-- oppgave 6.4
 INSERT INTO scratch_labels (label)
 values('Temporary label');
 
@@ -48,7 +51,7 @@ FROM scratch_labels;
 DROP TABLE scratch_labels;
 
 
-
+-- 7 Oppdater bestemte rader
 -- oppgave 7.1 - oppdaterer vekt
 UPDATE animals
 SET weight = 3.90
@@ -124,6 +127,7 @@ FEILMELDING: Cannot delete or update a parent row: a foreign key constraint
             fails (`animal_shelter_practice`.`animals`, CONSTRAINT `animals_ibfk_1`
             FOREIGN KEY (`area_id`) REFERENCES `areas` (`id`)
 
+-- flytte dyret ut av en avdeling til en annen.
 UPDATE animals
 SET area_id = 4
 WHERE id = 5;
