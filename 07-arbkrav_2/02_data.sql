@@ -61,18 +61,26 @@ WHERE (city = 'Oslo'
     OR city = 'Bergen'
     OR city = 'Trondheim')
 ORDER BY city, last_name;
+
 -- 3. Bestillinger i en periode: Finn alle bestillinger som ble registrert i juli 2025. Vis ordrenummer, dato, antall
 -- og status.
 SELECT order_id, order_date, quantity, status
 FROM orders
 WHERE order_date BETWEEN '2025-07-01' AND '2025-07-31';
 
+-- TEST DENNE FRA KATTAN
+    SELECT order_id, order_date, quantity, status
+    FROM orders
+    WHERE order_date like '2025-07-%';
+
 -- 4. Full bestillingsoversikt: Lag en oversikt som henter informasjon fra alle tre tabellene. Vis ordrenummer,
 -- kundens fornavn og etternavn, produktnavn, antall, pris per produkt, bestillingsdato og status.
 SELECT orders.order_id, customers.first_name, customers.last_name, products.product_id, products.product_name, orders.quantity, orders.order_date, orders.status
 FROM orders
 JOIN products on products.product_id = orders.product_id
-JOIN customers on customers.customer_id = orders.customer_id;
+JOIN customers on customers.customer_id = orders.customer_id
+ORDER BY order_id ASC;
+-- for å ha oversikten bruker jeg tabellnavn først
 
 -- 5. Beregnet verdi: Utvid bestillingsoversikten slik at den også viser en beregnet verdi basert på price *
 -- quantity. Gi den beregnede kolonnen et passende navn og sorter fra høyest til lavest verdi.
@@ -93,7 +101,8 @@ SELECT customers.customer_id, products.product_name, orders.quantity,
 FROM orders
 JOIN products ON products.product_id = orders.product_id
 JOIN customers ON customers.customer_id = orders.customer_id
-WHERE products.price * orders.quantity > 2000;
+WHERE products.price * orders.quantity > 2000
+ORDER BY beregnet_verdi DESC;
 
 
 -- 7. Bestillinger per status: Finn ut hvor mange bestillinger som har hver status.
@@ -112,6 +121,11 @@ SELECT category, COUNT(*), AVG(price) AS average
 FROM products
 GROUP BY category;
 
+SELECT category, AVG(price) AS average
+FROM products
+GROUP BY category
+ORDER BY average DESC;
+
 -- 9. Bestillinger per kunde: Finn ut hvor mange bestillinger hver kunde har gjort. Sorter kunden med flest
 -- bestillinger først. Resultatet skal også inkludere kunder som har 0 bestillinger.
 
@@ -121,7 +135,7 @@ FROM customers
 LEFT JOIN orders ON customers.customer_id = orders.customer_id
 ORDER BY quantity DESC;
 
--- eller slik?
+-- eller slik? KAttan har den
 SELECT customers.customer_id, customers.last_name, COUNT(orders.order_id) AS antall_bestillinger
 FROM customers
 LEFT JOIN orders ON customers.customer_id = orders.customer_id
@@ -131,18 +145,18 @@ GROUP BY customers.customer_id, customers.last_name;
 -- produkt. Produkter som ikke forekommer i noen bestilling skal også være med i
 -- resultatet og vises med 0 bestilte enheter. Husk at antall rader i orders og totalt
 -- antall bestilte enheter ikke nødvendigvis er det samme.
-SELECT products.product_id, products.product_name, COUNT(orders.order_id) AS antall_solgte_produkter
+SELECT products.product_id, products.product_name, COALESCE(SUM(quantity),0) AS total_of_product
 FROM products
 LEFT JOIN orders ON orders.product_id = products.product_id
 GROUP BY products.product_id, products.product_name
-ORDER BY antall_solgte_produkter DESC;
+ORDER BY product_id ASC;
 
 
 -- 11. Beregnet verdi per produkt: Finn samlet beregnet verdi for hvert produkt basert på
 -- bestillingene. Vis produktnavn, totalt antall bestilte enheter og samlet beregnet verdi.
 -- Produkter uten bestillinger skal også være med og vises med 0 bestilte enheter og 0 i
 -- beregnet verdi. Sorter fra høyest til lavest verdi.
-SELECT products.product_id, product_name, (SUM(orders.quantity)* price) AS beregnet_verdi
+SELECT products.product_id, product_name, (COALESCE(SUM(orders.quantity),0)* price) AS beregnet_verdi
 FROM products
 LEFT JOIN orders ON products.product_id = orders.product_id
 GROUP BY products.product_id, product_name, price
@@ -164,6 +178,13 @@ SELECT  customers.customer_id, last_name, orders.customer_id
 FROM customers
 LEFT JOIN orders ON orders.customer_id = customers.customer_id
 WHERE orders.customer_id IS NULL;
+
+-- Kattans kode, SJEKK DEN
+SELECT customers.first_name, customers.last_name, customers.customer_id, COUNT(orders.order_id) AS total_orders
+FROM orders
+RIGHT JOIN customers ON customers.customer_id = orders.customer_id
+GROUP BY customers.first_name, customers.last_name, customers.customer_id
+HAVING total_orders = 0;
 
 
 -- 14. Produkter uten bestillinger: Finn produktet eller produktene som ikke forekommer i noen bestilling.

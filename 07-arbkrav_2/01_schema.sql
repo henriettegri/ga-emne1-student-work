@@ -4,7 +4,7 @@ CREATE DATABASE IF NOT EXISTS nettbutikk;
 USE nettbutikk;
 
 CREATE TABLE customers (
-	customer_id INT NOT NULL,
+	customer_id INT AUTO_INCREMENT,
 	first_name VARCHAR(50) NOT NULL,
 	last_name VARCHAR(50) NOT NULL,
 	email VARCHAR(50) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE customers (
 );
 
 CREATE TABLE products (
-    product_id INT NOT NULL,
+    product_id INT AUTO_INCREMENT,
     product_name VARCHAR(100) NOT NULL,
     category VARCHAR(50) NOT NULL,
     price DECIMAL(10,2) NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE products (
 );
 
 CREATE TABLE orders (
-	order_id INT NOT NULL,
+	order_id INT AUTO_INCREMENT,
     customer_id INT NOT NULL,
     product_id INT NOT NULL,
     quantity INT NOT NULL,
@@ -35,3 +35,7 @@ CREATE TABLE orders (
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
     FOREIGN KEY (product_id) REFERENCES products(product_id)
 )
+
+LEGGER TIL DENNE
+ALTER TABLE orders
+MODUFY COLUMN status VARCHAR(20) NOT NULL DEFAULT 'Processing';
