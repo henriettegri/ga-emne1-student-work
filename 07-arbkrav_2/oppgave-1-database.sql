@@ -1,4 +1,9 @@
 -- OPPGAVE 1.1 og 1.2 - Opprett databasen og tabellene
+
+CREATE DATABASE IF NOT EXISTS nettbutikk;
+
+USE nettbutikk;
+
 CREATE TABLE customers (
 	customer_id INT AUTO_INKREMENT NOT NULL,
 	first_name VARCHAR(50) NOT NULL,
