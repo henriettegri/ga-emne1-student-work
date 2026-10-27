@@ -128,8 +128,22 @@ WHERE customer_id = 10;
 -- customers og products er parent table, orders er child table. Ordre har fremmednøkler til
 -- customers og products, derfor må ordre slettes før product og customer
 
-9. Bruk en transaksjon: Registrer en ny bestilling og reduser samtidig lagerbeholdningen for produktet
-som bestilles. Begge endringene skal utføres som én transaksjon. Kontroller resultatet før transaksjonen
-avsluttes. Avslutt transaksjonen med COMMIT. Forklar også hva ROLLBACK ville gjort dersom en av
-operasjonene skulle angres, og hvorfor transaksjoner er nyttige når flere endringer hører sammen.
+9. Bruk en transaksjon: Registrer en ny bestilling og reduser samtidig lagerbeholdningen
+for produktet som bestilles. Begge endringene skal utføres som én transaksjon. Kontroller
+resultatet før transaksjonen avsluttes. Avslutt transaksjonen med COMMIT. Forklar også
+hva ROLLBACK ville gjort dersom en av operasjonene skulle angres, og hvorfor transaksjoner
+er nyttige når flere endringer hører sammen.
+
+START TRANSACTION;
+
+INSERT INTO orders (customer_id, product_id, quantity, order_date)
+VALUES(8, 4, 1, '2026-10-27');
+
+UPDATE products
+SET stock = stock - 1
+WHERE product_name = '27-inch monitor';
+
+
+-- permanent endring hvis commit gjennomføres:
+COMMIT;
 
