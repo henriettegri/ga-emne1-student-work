@@ -27,7 +27,7 @@ WHERE order_date BETWEEN '2025-07-01' AND '2025-07-31';
 
 -- 4. Full bestillingsoversikt: Lag en oversikt som henter informasjon fra alle tre tabellene. Vis ordrenummer,
 -- kundens fornavn og etternavn, produktnavn, antall, pris per produkt, bestillingsdato og status.
-SELECT orders.order_id, customers.first_name, customers.last_name, products.product_id, products.product_name, orders.quantity, orders.order_date, orders.status
+SELECT orders.order_id, customers.first_name, customers.last_name, products.product_id, products.product_name, products.price, orders.quantity, orders.order_date, orders.status
 FROM orders
 JOIN products on products.product_id = orders.product_id
 JOIN customers on customers.customer_id = orders.customer_id
@@ -48,13 +48,14 @@ ORDER BY beregnet_verdi DESC;
 
 -- 6. Bestillinger med høy verdi: Finn bestillinger med en beregnet verdi på mer enn 2000 kr. Vis kunden,
 -- produktet, antall, pris og beregnet verdi.
-SELECT customers.customer_id, products.product_name, orders.quantity,
+SELECT customers.customer_id, customers.last_name, products.product_name, orders.quantity,
        products.price, products.price * orders.quantity AS beregnet_verdi
 FROM orders
 JOIN products ON products.product_id = orders.product_id
 JOIN customers ON customers.customer_id = orders.customer_id
 WHERE products.price * orders.quantity > 2000
 ORDER BY beregnet_verdi DESC;
+
 
 
 -- 7. Bestillinger per status: Finn ut hvor mange bestillinger som har hver status.
@@ -79,7 +80,9 @@ ORDER BY average DESC;
 SELECT customers.customer_id, customers.last_name, COUNT(orders.order_id) AS antall_bestillinger
 FROM customers
 LEFT JOIN orders ON customers.customer_id = orders.customer_id
-GROUP BY customers.customer_id, customers.last_name;
+GROUP BY customers.customer_id, customers.last_name
+ORDER BY antall_bestillinger DESC;
+
 
 
 -- 10. Antall solgte produkter: Finn ut hvor mange enheter som totalt er bestilt av hvert
@@ -97,7 +100,8 @@ ORDER BY product_id ASC;
 -- bestillingene. Vis produktnavn, totalt antall bestilte enheter og samlet beregnet verdi.
 -- Produkter uten bestillinger skal også være med og vises med 0 bestilte enheter og 0 i
 -- beregnet verdi. Sorter fra høyest til lavest verdi.
-SELECT products.product_id, product_name, (COALESCE(SUM(orders.quantity),0)* price) AS beregnet_verdi
+SELECT products.product_id, product_name, COALESCE(SUM(orders.quantity),0) AS antall_bestilte_enheter,
+       (COALESCE(SUM(orders.quantity),0)* price) AS beregnet_verdi
 FROM products
 LEFT JOIN orders ON products.product_id = orders.product_id
 GROUP BY products.product_id, product_name, price
@@ -165,8 +169,12 @@ VALUES (11, 'USB-C cable', 'Accessories', '199.00', 50),
         (12, 'Docking station', 'Accessories', '1899.00', 12),
         (13, 'External SSD 2TB', 'Storage', '1999.00', 8);
 
-SELECT *
-FROM products;
+-- kontrollspørring:
+SELECT product_name, category, price, stock
+FROM products
+WHERE (product_name = 'Docking station' OR
+      product_name = 'USB-C cable' OR
+       product_name = 'External SSD 2TB');
 
 -- 3. Registrer nye bestillinger: Henrik Solberg kjøper 1 Docking station, 2 enheter av USB-C cable og 1
 -- External SSD 2TB. Du får ikke oppgitt customer_id eller product_id. Finn først de nødvendige verdiene i
@@ -187,7 +195,7 @@ ORDER BY product_id;
 -- Kommentar: Da det ikke står noe om "status" i oppgaven, velger jeg å endre tabellen "Orders" slik at default i
 -- kolonnen status blir 'Processing' hvis ikke noe annet legges inn.
 ALTER TABLE orders
-MODUFY COLUMN status VARCHAR(20) NOT NULL DEFAULT 'Processing';
+MODIFY COLUMN status VARCHAR(20) NOT NULL DEFAULT 'Processing';
 
 INSERT INTO orders (customer_id, product_id, quantity, order_date)
 VALUES(9, 11, 2, '2026-10-25'),
@@ -199,10 +207,12 @@ VALUES(9, 11, 2, '2026-10-25'),
 -- kontroller resultatet.
 
 SELECT product_name, price
-FROM products;
+FROM products
+WHERE category = 'Accessories';
 
 UPDATE products
-SET price = price * 1.08;
+SET price = price * 1.08
+WHERE category = 'Accessories';
 
 
 -- 5. Lagerpåfylling: Produkter med færre enn 15 enheter på lager får levert 20 nye enheter. Finn først
@@ -245,6 +255,9 @@ UPDATE orders
 SET status = 'Delivered'
 WHERE status = 'Shipped' AND order_date < '2025-08-10';
 
+SELECT order_date, status
+FROM orders;
+
 
 -- 8. Opprett og slett testdata: Opprett en testkunde, et testprodukt og en bestilling hvor testkunden kjøper
 -- testproduktet. Kontroller at dataene finnes, og slett deretter alle testdataene igjen. Du må selv finne
@@ -269,8 +282,9 @@ DELETE FROM customers
 WHERE customer_id = 10;
 
 -- Kommentar: customers og products er parent-tabeller, mens orders er child-tabellen. orders er koblet til customers
--- og products med fremmednøkler. Av denne grunnen må bestillinger i orders slettes før kunder eller
--- bestillinger kan slettes.
+-- og products med fremmednøkler. Derfor må radene i orders slettes først. Hvis man prøver å slette en kunde
+-- eller et produkt som det fortsatt refereres til i orders, vil databasen hindre slettingen pga fremmednøkkelen da
+-- fremmednøkkelen påvirker rekkefølgen før slettingen.
 
 
 -- 9. Bruk en transaksjon: Registrer en ny bestilling og reduser samtidig lagerbeholdningen for produktet
@@ -287,17 +301,17 @@ UPDATE products
 SET stock = stock - 1
 WHERE product_name = '27-inch monitor';
 
-COMMIT;
-
 -- Kontroll av resultat før commit gjennomføres. Jeg kunne spesifisert kolonner som skal vises, men siden
 -- tabellen ikke er så stor, viser jeg alt.
 -- Sjekke at ordren er lagt inn.
 SELECT *
-FROM ordres;
+FROM orders;
 
 -- Sjekke at stock endres:
 SELECT *
 FROM products;
+
+COMMIT;
 
 -- Kommentar: Fordelen med transaksjoner er at flere endringer kan behandles som en samlet operasjon.
 -- Andre brukere vil først se endringene når COMMIT kjøres.
