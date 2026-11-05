@@ -17,6 +17,10 @@ try:
         try:
             min_population = int(hest)
 
+            if min_population < 0:
+                print("Wrong, population cant be negative!")
+                exit()
+
         except ValueError:
             print('Feil! Du må skrive inn et tall!\n')
             exit()
@@ -42,3 +46,6 @@ try:
 except Error as e:
     print(f"Error using MySQL: {e}")
 
+# Vi bruker fortsatt parametrisering fordi verdier fra brukeren alltid bør sendes til
+# databasen som parametere. Validering sjekker at folketallet er gyldig, men parametrisering
+# beskytter mot SQL-injection og sørger for at verdiene behandles riktig av databasen.

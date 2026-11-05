@@ -1,5 +1,5 @@
 import mysql.connector
-from mysql.connector import (Error)
+from mysql.connector import Error
 
 try:
     print("Connecting to the database...")
@@ -12,6 +12,7 @@ try:
     ) as connection:
         print("Connected to MySQL!")
         with connection.cursor() as cursor:
+            #query i stedet for sql går an
             sql = (
                 "SELECT Language, Percentage "
                 "FROM countrylanguage "
@@ -24,7 +25,7 @@ try:
                 print("No language found.")
             else:
                 for language, percentage in rows:
-                    print(f"{language}: {percentage}.")
+                    print(f"{language}: {percentage}%.")
 
 except Error as e:
     print(f"Error using MySQL: {e}")

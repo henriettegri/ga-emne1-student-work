@@ -20,16 +20,16 @@ try:
                     """)
             cursor.execute(sql)
             rows = cursor.fetchall()
-            if not rows:
-                print("No language found.")
-            else:
-                for language, percentage, is_official in rows:
-                    print(f"{language}: {percentage}, {is_official}.")
+            for language, percentage, is_official in rows:
+                print(f"{language}: {percentage}%, {is_official}.")
 
             rader = len(rows)
             print(f"Antall rader: {rader}.")
+            #print(f"Found {len(rows} language rows")
 
 except Error as e:
     print(f"Error using MySQL: {e}")
 
-# for-løkken trenger tre variabler fordi vi henter tre kolonner med select-spørringen. 
+# for-løkken trenger tre variabler fordi vi henter tre kolonner med select-spørringen. Rekkefølgen
+# bestemmes av select-spørringen
+#utpakkingen krever like mange variabler som det er verdier i tupelen.

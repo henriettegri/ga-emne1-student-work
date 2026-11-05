@@ -8,7 +8,7 @@ try:
         port=3306,
         user="root",
         password="gokstad",
-    database="world"
+        database="world"
     ) as connection:
         print("Connected to MySQL!")
         with connection.cursor() as cursor:

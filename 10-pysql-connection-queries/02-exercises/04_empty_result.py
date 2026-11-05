@@ -32,5 +32,5 @@ try:
 except Error as e:
     print(f"Error using MySQL: {e}")
 
-# en tom resultatliste er ikke det samme som en databasefeil. En databasefeil betyr at noe gikk galt. En tom liste er
-# et gyldig resultat.
+# en tom resultatliste er ikke det samme som en databasefeil. En databasefeil betyr at noe gikk galt.
+# En tom liste er et gyldig resultat.
