@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<header>
+        <meta charset="utf-8">
+        <title>Countries</title>
+</header>
+<body>
+<form action="/countries" method="get">
+    <label for="region">
+        Region
+    </label>
+    <input id="region"
+           name="region"
+           value ="{{ region }}">
+    <button type="submit">Search</button>
+</form>
+<h1>Countries in {{ region }}</h1>
+<ul>
+    {% for name, population in rows %}
+    <li>
+        {{ name }}: {{ population }}
+    </li>
+    {% else %}
+    <li> No countries found.</li>
+    {% endfor %}
+    <li>Countries found: {{ count }}</li>
+</ul>
+
+<a href="/">Home </a></br>
+
+
+</body>
+</html>
+
